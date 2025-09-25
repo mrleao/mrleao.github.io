@@ -1,29 +1,767 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Example HTML Page</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Marcos Vinícius Leão — Fullstack Engineer</title>
+  <meta name="description" content="Carta de apresentação do Marcos Vinícius Leão — dev Fullstack. Landing moderna + mini-game de escritório com VSCode interativo e código colorido."/>
+
+  <!-- Fonte -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Highlight.js (sempre colorido no modal) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/php.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dart.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+
+  <style> 
+  :root {
+      --bg: #07060b;
+      --bg2: #0c0b12;
+      --glass: rgba(255, 255, 255, .06);
+      --ink: #f6f7fb;
+      --muted: #cdd1e4;
+      --primary: #8ad7ff;
+      --line: #2a2740;
+      --brand: #7aa2f7;
+      --brand2: #bb9af7;
+      --brand3: #22d3ee;
+      --brand4: #34d399;
+
+      /* jogo */
+      --office-floor: #2a2d37;
+      --desk: #3b3f4c;
+      --desk-top: #585e72;
+      --desk-accent: #6b7188;
+      --stand: #1f2330;
+      --kb: #2a2e3c;
+      --mouse: #2c3242;
+      --chair: #252a38;
+    }
+
+    * { box-sizing: border-box }
+    html, body { height: 100% }
+    body {
+      margin: 0; color: var(--ink); overflow-x: hidden;
+      font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #221b5a 0%, transparent 60%),
+        radial-gradient(900px 600px at 100% 0%, #1d3e6e 0%, transparent 60%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+    }
+    body.no-scroll { overflow: hidden; }
+
+    a { color: var(--primary); text-decoration: none }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 22px }
+
+    /* Header + menu mobile */
+    header {
+      position: sticky; top: 0; z-index: 300;
+      backdrop-filter: blur(12px) saturate(1.1);
+      background: linear-gradient(180deg, rgba(7, 6, 11, .9), rgba(7, 6, 11, .55));
+      border-bottom: 1px solid var(--line)
+    }
+    .nav { display: flex; align-items: center; gap: 18px; height: 72px }
+    .brand {
+      font-weight: 800; letter-spacing: .5px; font-size: 1.1rem;
+      display: flex; align-items: center; gap: 10px
+    }
+    .brand i {
+      width: 26px; height: 26px; border-radius: 8px;
+      background: conic-gradient(from 0deg, var(--brand), var(--brand2), var(--brand3), var(--brand4), var(--brand));
+      box-shadow: 0 8px 20px -10px var(--brand2)
+    }
+
+    nav ul { display: flex; gap: 14px; list-style: none; padding: 0; margin: 0 }
+    .spacer { flex: 1 }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px; padding: 12px 16px;
+      border-radius: 16px; background: linear-gradient(135deg, var(--brand), var(--brand2));
+      color: #0b0b11; font-weight: 800; border: none; box-shadow: 0 10px 24px -12px var(--brand2);
+      cursor: pointer
+    }
+    .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); box-shadow: none }
+
+    /* hamburguer */
+    .nav-toggle {
+      display: none; width: 40px; height: 40px; border-radius: 10px;
+      border: 1px solid var(--line); background: rgba(255, 255, 255, .06); color: #fff
+    }
+
+    @media (max-width: 900px) {
+      /* Menu overlay: sai COMPLETAMENTE da tela quando fechado */
+      nav {
+        position: fixed; inset: 0; height: 100dvh;
+        background: rgba(7, 6, 11, .96);
+        border-top: 1px solid var(--line);
+        transform: translateY(-100%); opacity: 0; pointer-events: none;
+        transition: transform .24s ease, opacity .24s ease;
+        padding: 84px 22px 22px;
+        z-index: 200;
+      }
+      nav.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+
+      nav ul { flex-direction: column; gap: 12px }
+      .nav .btn { display: none }
+      .nav-toggle { display: inline-grid; place-content: center }
+    }
+
+    /* Hero */
+    .hero { padding: 90px 0 24px }
+    .title { font-size: clamp(30px, 4.2vw, 62px); line-height: 1.05; font-weight: 900 }
+    .subtitle { color: var(--muted); margin-top: 12px }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0 28px }
+    .chip {
+      padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .02))
+    }
+
+    /* Stacks Carousel */
+    .stacks-wrap { display: flex; justify-content: center }
+    .stacks {
+      max-width: calc(100% - 40px); width: 1100px;
+      border: 1px solid var(--line); border-radius: 16px; background: rgba(255, 255, 255, .03);
+      overflow: hidden; position: relative; margin: 12px 20px 40px;
+      mask-image: linear-gradient(90deg, transparent 0, #000 30px, #000 calc(100% - 30px), transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 30px, #000 calc(100% - 30px), transparent 100%);
+    }
+    .stack-track { display: flex; gap: 10px; padding: 10px; will-change: transform }
+    .stack {
+      min-width: 150px; height: 100px; padding: 5px 5px; border-radius: 14px;
+      color: #0b0b11; font-weight: 800; display: flex; align-items: center; gap: 10px; justify-content: center;
+      flex-shrink: 0; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2)
+    }
+    .stack img { width: 100px; height: 100px; object-fit: contain }
+    .s-laravel{background:#ffc1bc}.s-php{background:#d7daff}.s-flutter{background:#97d0ff}
+    .s-android{background:#3ddc84}.s-java{background:#e2b081}.s-node{background:#c3ebbf}
+    .s-vue{background:#42b883}.s-react{background:#61dafb}.s-spring{background:#6db33f}
+    .s-docker{background:#2496ed}.s-k8s{background:#326ce5}.s-mysql{background:#00758f}
+    .s-pg{background:#336791}.s-redis{background:#ffc1bc}.s-mongo{background:#10aa50}
+
+    /* Sobre mim */
+    #sobre { padding: 46px 0 }
+    .about { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start }
+    .me {
+      width: 100%; max-width: 360px; border-radius: 18px; border: 1px solid var(--line);
+      box-shadow: 0 20px 60px -24px rgba(0, 0, 0, .5)
+    }
+    .glass { background: var(--glass); border: 1px solid var(--line); border-radius: 24px; box-shadow: 0 10px 40px -14px rgba(0, 0, 0, .6) }
+    .card { padding: 22px }
+    .subtitle2 { color: var(--muted) }
+
+    /* Timeline */
+    .timeline { position: relative; margin-top: 6px }
+    .timeline:before {
+      content: ""; position: absolute; left: 18px; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(180deg, var(--brand2), transparent)
+    }
+    .item {
+      position: relative; padding: 12px 12px 12px 58px;
+      border: 1px solid var(--line); border-radius: 16px; background: rgba(255, 255, 255, .03); margin-bottom: 12px
+    }
+    .item:before {
+      content: ""; position: absolute; left: 10px; top: 18px; width: 16px; height: 16px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand), var(--brand2)); box-shadow: 0 0 0 4px rgba(186, 169, 247, .15)
+    }
+    .item .when { color: var(--muted); font-size: .92rem }
+
+    /* Formação / Projetos */
+    section { padding: 46px 0 }
+    h2 { font-size: clamp(22px, 2.6vw, 34px); margin: 0 0 14px; font-weight: 900 }
+
+    .edu { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px }
+    .edu .card { grid-column: span 6 }
+
+    .projects { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; margin-top: 50px; }
+    .project {
+      grid-column: span 6; border: 1px solid var(--line); border-radius: 18px; overflow: hidden;
+      background: rgba(255, 255, 255, .03)
+    }
+    .project img { width: 100%; height: 200px; object-fit: cover; display: block }
+    .project .pbody { padding: 14px }
+    .project .subtitle { color: var(--muted); font-style: italic }
+    .project .actions { display: flex; gap: 10px; flex-wrap: wrap }
+
+    /* Game (desktop) */
+    .game-wrap { position: relative; overflow: hidden; height: min(70vh, 560px) }
+    .game-frame { position: absolute; inset: 0; display: grid; place-items: center }
+    #stage { position: relative; width: 1088px; height: 512px; transform-origin: center }
+
+    .hud {
+      position: absolute; left: 12px; top: 12px; padding: 8px 12px; font-weight: 600;
+      border-radius: 14px; background: rgba(10, 10, 14, .6); border: 1px solid var(--line); z-index: 3
+    }
+    .tooltip {
+      position: absolute; left: 50%; transform: translateX(-50%); bottom: 70px;
+      background: rgba(0, 0, 0, .75); border: 1px solid var(--line); padding: 6px 10px; border-radius: 10px; font-size: .9rem;
+      z-index: 3; display: none
+    }
+    .speech {
+      position: absolute; left: 50%; transform: translateX(-50%); bottom: 14px; max-width: min(680px, 92%);
+      background: rgba(18, 16, 28, .88); border: 1px solid var(--line); padding: 12px 14px; border-radius: 14px; z-index: 3
+    }
+
+    .tile { position: absolute; width: 32px; height: 32px }
+    .floor {
+      background:
+        linear-gradient(45deg, rgba(255, 255, 255, .02) 25%, transparent 25% 75%, rgba(255, 255, 255, .02) 75%),
+        repeating-linear-gradient(0deg, #2b2e39 0 16px, #2a2d37 16px 32px)
+    }
+    .wall { background: linear-gradient(180deg, #171923, #11131b) }
+
+    .desk { position: absolute; width: 32px; height: 32px; background: var(--desk-top); border: 1px solid #2a2e3a; box-shadow: inset 0 6px 0 0 var(--desk-accent) }
+    .desk:after { content: ""; position: absolute; left: 4px; right: 4px; bottom: 3px; height: 6px; background: var(--desk); border-radius: 2px }
+
+    .kb { background: var(--kb); border: 1px solid #1b2030; border-radius: 3px }
+    .mouse { background: var(--mouse); border-radius: 50% }
+
+    .monitor {
+      position: absolute; width: 26px; height: 18px; left: 3px; top: -8px; background: #1e1e1e;
+      border: 2px solid #0a1826; border-bottom-color: #08111b; border-radius: 3px; box-shadow: inset 0 0 12px rgba(8, 8, 8, .6)
+    }
+    .monitor.on { box-shadow: inset 0 0 24px rgba(16, 180, 255, .25) }
+    .monitor:after { content: ""; position: absolute; width: 12px; height: 4px; left: 7px; bottom: -6px; background: var(--stand); border-radius: 2px }
+    .monitor .os { position: absolute; right: 4px; bottom: 2px; width: 8px; height: 8px; border-radius: 2px; opacity: .85 }
+    .os.vscode{background:#22a6f2}.os.java{background:#e76f00}.os.php{background:#777bb3}.os.flutter{background:#02569b}.os.node{background:#6cc24a}
+
+    .chair { background: var(--chair); border: 1px solid #1b1f2b; border-radius: 6px }
+
+    .plant { position: absolute; width: 32px; height: 32px }
+    .plant:before {
+      content: ""; position: absolute; left: 10px; bottom: 4px; width: 12px; height: 8px; background: #7a4a2b; border-radius: 3px 3px 0 0;
+      box-shadow: inset 0 2px 0 rgba(255, 255, 255, .06)
+    }
+    .plant:after {
+      content: ""; position: absolute; left: 6px; bottom: 10px; width: 20px; height: 16px;
+      background:
+        radial-gradient(circle at 30% 70%, #2fd27a 0 8px, transparent 9px),
+        radial-gradient(circle at 70% 70%, #27c96a 0 8px, transparent 9px),
+        radial-gradient(circle at 50% 30%, #25a85c 0 7px, transparent 8px);
+      filter: drop-shadow(0 2px 0 rgba(0, 0, 0, .2))
+    }
+
+    /* Player */
+    .player-wrap { position: absolute; width: 32px; height: 40px; z-index: 4 }
+    .player-name { position: absolute; left: 50%; transform: translateX(-50%); top: -12px; font-size: 11px; font-weight: 800; text-shadow: 0 1px 2px rgba(0, 0, 0, .6) }
+    .player {
+      position: absolute; width: 32px; height: 32px; left: 0; top: 8px; image-rendering: pixelated;
+      background: url('assets/images/game/sprite.png') no-repeat 0 0 / 128px 256px;
+    }
+    .player.idle { animation: frames4 .6s steps(4) infinite }
+    .player.walk { animation: frames4 .36s steps(4) infinite }
+    @keyframes frames4 { from { background-position-x: 0 } to { background-position-x: -128px } }
+
+    /* Modal VSCode */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, .6); display: none; align-items: center; justify-content: center; z-index: 500
+    }
+    .modal-backdrop.show { display: flex }
+    .vscode {
+      width: min(980px, 96vw); height: min(560px, 85vh); background: #1e1e1e; color: #ddd;
+      border-radius: 12px; overflow: hidden; border: 1px solid #333; box-shadow: 0 30px 80px rgba(0, 0, 0, .5)
+    }
+    .vscode .titlebar { background: #2d2d2d; display: flex; align-items: center; padding: 8px 12px; gap: 10px }
+    .vscode .editor { display: grid; grid-template-columns: 56px 1fr; height: calc(100% - 42px) }
+    .vscode .gutter { background: #1b1b1b; color: #777; padding: 10px 0; font-family: monospace; text-align: right }
+    .vscode pre {
+      margin: 0; padding: 12px 16px; background: #1e1e1e; color: #e3eaf5; overflow: auto;
+      font-family: Consolas, Monaco, monospace; font-size: 13px; line-height: 1.5
+    }
+    .hljs { background: transparent !important; }
+
+    /* Controles móveis (ficam dentro do #game e somem junto no mobile) */
+    .mobile-ctrls {
+      position: absolute; left: 0; right: 0; bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+      display: none; justify-content: space-between; align-items: flex-end;
+      padding: 0 12px; z-index: 4; pointer-events: none;
+    }
+    .pad, .btn-e { pointer-events: auto; user-select: none; touch-action: manipulation; }
+    .pad {
+      width: 140px; height: 140px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+      gap: 6px; opacity: .95;
+    }
+    .pad button, .btn-e {
+      background: rgba(20,20,28,.7); border: 1px solid var(--line); color: #fff; font-weight: 800;
+      border-radius: 12px; min-width: 44px; min-height: 44px;
+    }
+    .btn-e { width: 64px; height: 64px; margin: 0 10px 18px 0; border-radius: 16px }
+    .pad .empty { visibility: hidden }
+
+    footer { padding: 28px 0 60px; text-align: center; color: var(--muted) }
+    .foot-emoji { font-size: 20px; opacity: .9 }
+
+    /* Responsivo geral */
+    @media (max-width: 1024px) { .about { grid-template-columns: 1fr } }
+    @media (max-width: 900px) {
+      .project { grid-column: span 12 }
+      .edu .card { grid-column: span 12 }
+      /* >>> Ocultar a seção do jogo no mobile <<< */
+      #game { display: none; }
+      /* também não mostramos o overlay VSCode no mobile se alguém abrir via hash acidentalmente */
+      #codeModal { display: none !important; }
+    }
+    @media (max-width: 520px) {
+      .title { font-size: 10vw }
+      .stack { min-width: 122px }
+    }
+</style>
 </head>
 <body>
-    <h1>BEM-VINDO</h1>
-    <p>Logo mais posto algo</p>
+  <header>
+    <div class="container nav">
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-controls="topNav" aria-expanded="false">☰</button>
+      <div><i></i> Marcos Leão</div>
+      <nav id="topNav" aria-label="principal">
+        <ul>
+          <li><a href="#experiencia">Experiência</a></li>
+          <li><a href="#formacao">Formação</a></li>
+          <li><a href="#projetos">Projetos</a></li>
+          <li><a href="#sobre">Sobre</a></li>
+        </ul>
+      </nav>
+      <div class="spacer"></div>
+      <a class="btn ghost" href="#game">🎮 Jogar</a>
+      <a class="btn" href="#contato">Fale comigo</a>
+    </div>
+  </header>
 
-    
+    <!-- TITULO -->
+    <section>
+      <div class="container">
+        <div class="title">Desenvolvedor sem medo de aprender :)</div>
+        <p class="subtitle">
+          Sou <strong>Marcos Vinícius Leão de Sales</strong> — desenvolvedor <strong>Fullstack</strong> focado em
+          <strong>Laravel, Flutter, Java, Node, VueJS e bancos SQL</strong>.
+        </p>
+        <div class="container">
+          <div class="chips">
+            <span class="chip">PHP/Laravel</span>
+            <span class="chip">Flutter/IOS/Android</span>
+            <span class="chip">Java/Node</span>
+            <span class="chip">Vue/React</span>
+            <span class="chip">Microsserviços</span>
+            <span class="chip">CI/CD</span>
+            <span class="chip">Azure</span>
+            <span class="chip">Docker</span>
+            <span class="chip">javaScript</span>
+            <span class="chip">Clean Code</span>
+            <span class="chip">TypeScript</span>
+            <span class="chip">Gitflow</span>
+            <span class="chip">NoSql</span>
+            <span class="chip">Google Play Console</span>
+            <span class="chip">Design Patterns</span>
+            <span class="chip">SOLID</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1912958440331204"
-     crossorigin="anonymous"></script>
-<!-- banner -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-1912958440331204"
-     data-ad-slot="4786588786"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+    <!-- SOBRE MIM -->
+    <section id="sobre">
+      <div class="container glass card">
+        <h2>Sobre mim</h2>
+        <div class="about">
+          <img src="assets/images/profile/profile.png" alt="Foto de Marcos Vinícius Leão" class="me"/>
+          <div>
+            <p class="subtitle2">Brasileiro, casado — <strong>32 anos</strong>. Aguiarnópolis/TO.<br>
+              Tel: <a href="tel:+5563992131462">+55 (63) 99213-1462</a> · Email:
+              <a href="mailto:marcosleaosistemas@gmail.com">marcosleaosistemas@gmail.com</a>
+            </p>
+            <p>Sou apaixonado por tecnologia, programação e desafios que exigem criatividade e solução de problemas. Quando não sei algo, eu aprendo e resolvo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1912958440331204"
-     crossorigin="anonymous"></script>
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="stacks-wrap">
+        <div class="stacks">
+          <div id="stackTrack" class="stack-track"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIÊNCIA -->
+    <section id="experiencia">
+      <div class="container">
+        <h2>Experiência</h2>
+        <div class="timeline">
+          <div class="item"><strong>Serasa Experian — Fullstack Sênior</strong><div class="when">ago/2023 – atual • Java, Node.js, TypeScript, migração JDK/Maven, sustentação e novas soluções.</div></div>
+          <div class="item"><strong>Movida — Fullstack Pleno/Sênior</strong><div class="when">jan/2021 – ago/2023 • Laravel, Vue, microsserviços, filas, logs, MySQL, Docker, CI/CD.</div></div>
+          <div class="item"><strong>Morpheus — Fullstack Pleno</strong><div class="when">out/2020 – jan/2021 • Java, PHP, React, Vue, Cordova.</div></div>
+          <div class="item"><strong>Cielo — Android</strong><div class="when">jul/2020 – out/2020 • Kotlin, REST, MVVM/MVC, Firebase.</div></div>
+          <div class="item"><strong>Everis (ITAÚ) — Android</strong><div class="when">abr/2020 – out/2020 • Kotlin, REST.</div></div>
+          <div class="item"><strong>Jettax — Fullstack</strong><div class="when">out/2019 – abr/2020 • Laravel + Vue, microsserviços, MongoDB.</div></div>
+          <div class="item"><strong>SMS Araguaína — Fullstack</strong><div class="when">nov/2018 – out/2019 • App de agendamento (Java/Kotlin).</div></div>
+          <div class="item"><strong>Dith2 — WordPress/C#</strong><div class="when">jul/2018 – nov/2018 • Sites, PHP e design.</div></div>
+          <div class="item"><strong>Ergon — Suporte/Delphi</strong><div class="when">mar/2017 – out/2017 • Callcenter, Delphi e SQL Server.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORMAÇÃO -->
+    <section id="formacao">
+      <div class="container">
+        <h2>Formação</h2>
+        <div class="edu">
+          <div class="glass card"><h3>ITPAC — Bacharelado em Sistemas de Informação</h3><p class="when">2014–2017</p></div>
+          <div class="glass card"><h3>UNICESUMAR — MBA em Data Science & Big Data</h3><p class="when">Cursando</p></div>
+          <div class="glass card"><h3>UNICESUMAR — Pós-Graduação em Engenharia de Software</h3><p class="when">Cursando</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJETOS -->
+    <section id="projetos">
+      <div class="container">
+        <h2>Projetos</h2>
+        <div class="subtitle">☕ O café é o que nos move!</div>
+        <div class="projects">
+          <article class="project">
+            <div class="pbody">
+              <h3>Calculadora do Exordion</h3>
+              <p>Calcula dados de tempo, quantidade de runas, custos e lucros para um jogo online.</p>
+              <p>Html • CSS</p>
+              <div class="actions">
+                <a class="btn" href="https://mrleao.github.io/exordion-tools/" target="_blank" rel="noopener">Ver projeto</a>
+                <a class="btn ghost" href="https://github.com/mrleao/exordion-tools" target="_blank" rel="noopener">GitHub</a>
+              </div>
+            </div>
+          </article>
+          <article class="project">
+            <div class="pbody">
+              <h3>Word Search Infinite</h3>
+              <p>Jogo de caça palavras infinito feito em ptbr e inglês para Android e IOS que funciona offline.</p>
+              <p>Flutter • RevenueCat</p>
+              <div class="actions">
+                <a class="btn" href="https://play.google.com/store/apps/details?id=com.marvindigitalsolutions.word_search" target="_blank" rel="noopener">Ver projeto</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- MINI-GAME (oculto no mobile) -->
+    <section id="game">
+      <div class="container">
+        <div class="glass card game-wrap">
+          <div class="hud">WASD/Setas • Aproxime-se de um <strong>PC</strong> e <strong>pressione E</strong> para abrir o “VSCode” (Java, PHP, Flutter, Node)</div>
+          <div id="tooltip" class="tooltip">Pressione <strong>E</strong> para abrir o VSCode</div>
+          <div id="speech" class="speech" aria-live="polite"></div>
+
+          <div class="game-frame">
+            <div id="stage" class="game" role="application" aria-label="Mini-game do portfólio — escritório"></div>
+          </div>
+
+          <!-- Controles móveis (somem junto com #game) -->
+          <div class="mobile-ctrls" aria-hidden="true">
+            <div class="pad" id="dpad">
+              <span class="empty"></span>
+              <button data-k="up">▲</button>
+              <span class="empty"></span>
+              <button data-k="left">◀</button>
+              <span class="empty"></span>
+              <button data-k="right">▶</button>
+              <span class="empty"></span>
+              <button data-k="down">▼</button>
+              <span class="empty"></span>
+            </div>
+            <button class="btn-e" id="btnE">E</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section id="contato">
+      <div class="container glass card">
+        <h2>Contato</h2>
+        <p>Portas abertas para conversar, trocar ideias e colaborar.</p>
+        <div class="chips">
+          <a class="btn" href="mailto:marcosleaosistemas@gmail.com">marcosleaosistemas@gmail.com</a>
+          <a class="btn ghost" href="https://github.com/mrleao?tab=repositories" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn ghost" href="https://www.linkedin.com/in/marcos--leao" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="foot-emoji">🎮 • 🧰 • ☕</div>
+      <div style="opacity:.85">Feito com animações, jogo e muito café.</div>
+    </div>
+  </footer>
+
+  <!-- VSCode Modal (também oculto no mobile via CSS) -->
+  <div id="codeModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="vscode">
+      <div class="titlebar">
+        <span>VSCode</span>
+        <div class="spacer"></div>
+        <button id="closeModal" class="btn ghost" style="padding:6px 10px; border-radius:8px">Fechar</button>
+      </div>
+      <div class="editor">
+        <div class="gutter" id="gutter"></div>
+        <pre id="codePre"><code id="codeEl" class="language-java"></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ===== Menu mobile ===== */
+    const navToggle = document.getElementById('navToggle');
+    const topNav = document.getElementById('topNav');
+    function setMenu(open){
+      topNav.classList.toggle('open', open);
+      document.body.classList.toggle('no-scroll', open);
+      navToggle.setAttribute('aria-expanded', String(open));
+    }
+    navToggle.addEventListener('click', ()=> setMenu(!topNav.classList.contains('open')));
+    topNav.addEventListener('click', e => { if(e.target.tagName === 'A') setMenu(false); });
+
+    /* ===== Stacks: carousel ===== */
+    const stacks = [
+      {name:'Redis',img:'assets/images/stacks/redis.png'},
+      {name:'MongoDB',img:'assets/images/stacks/mongodb.png'},
+      {name:'Laravel',img:'assets/images/stacks/laravel.png'},
+      {name:'PHP',img:'assets/images/stacks/php.png'},
+      {name:'Flutter',img:'assets/images/stacks/flutter.png'},
+      {name:'Java',img:'assets/images/stacks/java.png'},
+      {name:'Node',img:'assets/images/stacks/node.png'},
+      {name:'Vue',img:'assets/images/stacks/vue.png'},
+      {name:'Spring',img:'assets/images/stacks/spring.png'},
+      {name:'Docker',img:'assets/images/stacks/docker.png'},
+      {name:'Kubernetes',img:'assets/images/stacks/kubernetes.png'},
+      {name:'MySQL',img:'assets/images/stacks/mysql.png'},
+      {name:'PostgreSQL',img:'assets/images/stacks/postgresql.png'}
+    ];
+    const track = document.getElementById('stackTrack');
+    const row = stacks.map(s=>`<div class="stack"><img src="${s.img}" alt="${s.name}"></div>`).join('');
+    track.innerHTML = row + row;
+    let x=0, speed=0.08;
+    function anim(t){ if(!anim.t0) anim.t0=t; const dt=t-anim.t0; anim.t0=t; x-=speed*dt; const w=track.scrollWidth/2; if(Math.abs(x)>w) x+=w; track.style.transform=`translateX(${x}px)`; requestAnimationFrame(anim); }
+    requestAnimationFrame(anim);
+
+    /* ===== Mini-game (só roda em desktop, pois #game some no mobile) ===== */
+    const gameSection = document.getElementById('game');
+    if (getComputedStyle(gameSection).display !== 'none') {
+      const TILE=32, W=34, H=16;
+      const stage=document.getElementById('stage');
+      const speech=document.getElementById('speech');
+      const tooltip=document.getElementById('tooltip');
+      const solid=new Set();
+      const computers=[];
+
+      for(let y=0;y<H;y++){
+        for(let x=0;x<W;x++){
+          const f=document.createElement('div');
+          f.className='tile floor';
+          f.style.transform=`translate(${x*TILE}px,${y*TILE}px)`;
+          stage.appendChild(f);
+        }
+      }
+
+      function tile(x,y,cls){
+        const d=document.createElement('div');
+        d.className=`tile ${cls}`;
+        d.style.transform=`translate(${x*TILE}px,${y*TILE}px)`;
+        stage.appendChild(d);
+        if(['wall','chair','desk','monitor','kb','mouse','plant'].includes(cls)) solid.add(`${x},${y}`);
+        return d;
+      }
+      function putDesk(x,y){ return tile(x,y,'desk'); }
+      function putKB(x,y){ tile(x,y,'kb'); }
+      function putMouse(x,y){ tile(x,y,'mouse'); }
+      function putMonitor(x,y,lang){
+        const m=tile(x,y,'monitor'); m.classList.add('on');
+        const dot=document.createElement('i');
+        dot.className='os vscode';
+        if(lang==='java') dot.className='os java';
+        if(lang==='php') dot.className='os php';
+        if(lang==='flutter') dot.className='os flutter';
+        if(lang==='node') dot.className='os node';
+        m.appendChild(dot);
+        computers.push({x, y:y+1, lang});
+        solid.add(`${x},${y}`);
+        return m;
+      }
+      function putPlant(x,y){ tile(x,y,'plant'); }
+
+      for(let x=0;x<W;x++){ tile(x,0,'wall'); tile(x,H-1,'wall'); }
+      for(let y=0;y<H;y++){ tile(0,y,'wall'); tile(W-1,y,'wall'); }
+
+      function island(ax, ay, langs){
+        for(let y=0;y<3;y++) for(let x=0;x<4;x++) putDesk(ax+x, ay+y);
+        putMonitor(ax+1, ay-1, langs[0]); putMonitor(ax+2, ay-1, langs[1]);
+        putKB(ax+1, ay); putKB(ax+2, ay); putMouse(ax, ay+1); putMouse(ax+3, ay+1);
+        putMonitor(ax+1, ay+3, langs[2]); putMonitor(ax+2, ay+3, langs[3]);
+        tile(ax, ay+1, 'chair'); tile(ax+3, ay+1, 'chair');
+        putPlant(ax-1, ay); putPlant(ax+4, ay+2);
+      }
+      island(6,4, ['java','php','flutter','node']);
+      island(14,4,['php','flutter','node','java']);
+      island(22,4,['flutter','node','java','php']);
+      island(10,10,['node','java','php','flutter']);
+
+      const playerWrap=document.createElement('div'); playerWrap.className='player-wrap';
+      const nameTag=document.createElement('div'); nameTag.className='player-name'; nameTag.textContent='Leão';
+      const player=document.createElement('div'); player.className='player idle';
+      playerWrap.appendChild(nameTag); playerWrap.appendChild(player); stage.appendChild(playerWrap);
+
+      let gx=3, gy=3; let px=gx*TILE, py=gy*TILE; let tx=px, ty=py; let dir='down', mode='idle';
+      const FRAME=32; const idleRow={up:0,down:1,left:2,right:3}; const walkRow={up:4,down:5,left:6,right:7};
+      function setDirection(d){ dir=d; const row=(mode==='walk'?walkRow[dir]:idleRow[dir]); player.style.backgroundPosition=`0 -${row*FRAME}px`; }
+      function setMode(m){ if(mode===m) return; player.classList.remove(mode); mode=m; player.classList.add(m); setDirection(dir); }
+
+      const SPEED=0.28; let last=performance.now();
+      function approach(p,t,step){ return Math.abs(t-p)<=step? t : p + Math.sign(t-p)*step; }
+      function tick(now){
+        const dt=now-last; last=now;
+        const step=SPEED*dt;
+        px=approach(px,tx,step); py=approach(py,ty,step);
+        playerWrap.style.transform=`translate(${px}px,${py}px)`;
+        const arrived=(px===tx && py===ty);
+        if(arrived){ if(keys.size>0){ chooseNextTarget(); } else { setMode('idle'); } }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+
+      function isBlocked(x,y){ return (x<1||x>W-2||y<1||y>H-2|| solid.has(`${x},${y}`)); }
+      function dFrom(dx,dy){ if(dy<0) return 'up'; if(dy>0) return 'down'; if(dx<0) return 'left'; return 'right'; }
+      const keys=new Set();
+      function chooseNextTarget(){
+        let dx=0,dy=0;
+        if(keys.has('up')) dy=-1; else if(keys.has('down')) dy=1;
+        if(keys.has('left')) dx=-1; else if(keys.has('right')) dx=1;
+        if(dx===0&&dy===0) return;
+        const nx=gx+dx, ny=gy+dy;
+        if(!isBlocked(nx,ny)){ gx=nx; gy=ny; tx=gx*TILE; ty=gy*TILE; setMode('walk'); setDirection(dFrom(dx,dy)); }
+      }
+
+      const mapKey={ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',KeyE:'interact',Escape:'esc'};
+      addEventListener('keydown', e=>{
+        const k=mapKey[e.code]||mapKey[e.key]; if(!k) return;
+        if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+        if(k==='interact'){ tryOpenVS(); return; }
+        if(k==='esc'){ closeVS(); return; }
+        if(!keys.has(k)) keys.add(k);
+        if(px===tx && py===ty) chooseNextTarget();
+      });
+      addEventListener('keyup', e=>{
+        const k=mapKey[e.code]||mapKey[e.key]; if(!k||k==='interact'||k==='esc') return;
+        keys.delete(k); if(keys.size===0 && px===tx && py===ty) setMode('idle');
+      });
+
+      function say(t){ const s=Array.isArray(t)?t.join(' '):t; let i=0; speech.textContent=''; const iv=setInterval(()=>{ speech.textContent=s.slice(0,++i); if(i>=s.length) clearInterval(iv); },14); }
+      setTimeout(()=> say('Explore o escritório. Aproxime-se de um PC e pressione E para abrir o VSCode.'), 600);
+
+      function nearestPC(){ let best=null, bd=99; for(const pc of computers){ const d=Math.abs(pc.x-gx)+Math.abs(pc.y-gy); if(d<bd){ bd=d; best=pc; } } return {pc:best, dist:bd}; }
+      function tryOpenVS(){ const {pc,dist}=nearestPC(); if(pc && dist<=1){ openModal(pc.lang); } }
+      setInterval(()=>{ const {pc,dist}=nearestPC(); tooltip.style.display=(pc && dist<=1)?'block':'none'; }, 120);
+
+      /* VSCode Modal */
+      const modal=document.getElementById('codeModal');
+      const closeModalBtn=document.getElementById('closeModal');
+      const codeEl=document.getElementById('codeEl');
+      const gutter=document.getElementById('gutter');
+
+      const snippets={
+        java:`public class Main {
+  public static void main(String[] args){
+    Dev marcos = new Dev("Marcos Vinícius Leão", "Fullstack");
+    marcos.add("Laravel"); marcos.add("Flutter"); marcos.add("Android");
+    marcos.say("Se eu não sei, aprendo e entrego.");
+  }
+}
+class Dev{
+  private String nome; private String foco;
+  Dev(String n, String f){ nome=n; foco=f; }
+  void add(String s){ System.out.println("+ "+s); }
+  void say(String s){ System.out.println(s); }
+}`,
+        php:`<?php
+class Dev{
+  function __construct(public string $nome, public string $foco){}
+  function add(string $s){ echo "+ $s\\n"; }
+  function say(string $m){ echo $m."\\n"; }
+}
+$marcos = new Dev('Marcos Vinícius Leão','Fullstack');
+foreach(['Laravel','Vue','Docker'] as $s){ $marcos->add($s); }
+$marcos->say('Back-end sólido, front caprichado.');`,
+        flutter:`import 'package:flutter/material.dart';
+void main()=> runApp(const App());
+class App extends StatelessWidget{
+  const App({super.key});
+  @override Widget build(BuildContext c){
+    final skills=['Flutter','Android','CI/CD'];
+    return MaterialApp(home: Scaffold(body: Center(child: Column(mainAxisSize: MainAxisSize.min,children:[
+      const Text('Marcos Vinícius Leão', style: TextStyle(fontWeight: FontWeight.bold)),
+      for(final s in skills) Text('• '+s)
+    ])))));
+  }
+}
+`,
+        node:`class Dev{
+  constructor(nome,foco){ this.nome=nome; this.foco=foco; this.skills=[]; }
+  add(s){ this.skills.push(s); }
+  say(m){ console.log(m); }
+}
+const marcos=new Dev('Marcos Vinícius Leão','Fullstack');
+['Node','TypeScript','Kubernetes'].forEach(s=>marcos.add(s));
+marcos.say('Bora construir algo incrível!');`
+      };
+
+      function renderHighlighted(snippet, language){
+        const escape = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+        const apply = () => {
+          if(window.hljs && window.hljs.getLanguage(language)){
+            codeEl.className = `hljs language-${language}`;
+            codeEl.innerHTML = window.hljs.highlight(snippet, {language}).value;
+            return true;
+          }
+          return false;
+        };
+        if(apply()) return;
+        codeEl.className=`language-${language}`;
+        codeEl.innerHTML=escape(snippet);
+        let tries=0; const iv=setInterval(()=>{ if(apply() || ++tries>30) clearInterval(iv); },100);
+      }
+
+      function openModal(lang){
+        const language = ({java:'java', php:'php', flutter:'dart', node:'javascript'})[lang] || 'plaintext';
+        const snippet = snippets[lang] || '// sem snippet';
+        const lines = Math.max(40, snippet.split("\n").length);
+        gutter.innerHTML = Array.from({length:lines},(_,i)=>`<div style="padding:0 8px">${i+1}</div>`).join('');
+        renderHighlighted(snippet, language);
+        modal.classList.add('show'); modal.setAttribute('aria-hidden','false');
+      }
+      function closeVS(){ modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); }
+      closeModalBtn.addEventListener('click', closeVS);
+      addEventListener('keydown', e=>{ if(e.key==='Escape' && modal.classList.contains('show')) closeVS(); });
+
+      /* Autoscale do stage (desktop) */
+      const frame = document.querySelector('.game-frame');
+      function fitStage(){
+        const sw = W*TILE, sh = H*TILE;
+        const s = Math.min(frame.clientWidth/sw, frame.clientHeight/sh);
+        const scale = Math.max(0.6, Math.min(s, 2));
+        stage.style.transform = `scale(${scale})`;
+      }
+      addEventListener('resize', fitStage);
+      new ResizeObserver(fitStage).observe(frame);
+      fitStage();
+    }
+  </script>
 </body>
 </html>
