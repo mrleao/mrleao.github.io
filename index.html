@@ -91,19 +91,20 @@
     /* hamburguer */
     .nav-toggle {
       display: none; width: 40px; height: 40px; border-radius: 10px;
-      border: 1px solid var(--line); background: rgba(255, 255, 255, .06); color: #fff
+      border: 1px solid var(--line); background: rgba(255, 255, 255, .06); color: #fff;
+      position: relative; z-index: 1000; /* fica acima do overlay do nav */
     }
 
     @media (max-width: 900px) {
-      /* Menu overlay: sai COMPLETAMENTE da tela quando fechado */
+      /* Menu overlay: ocupa a tela mas fica atrás do botão (z-index menor) */
       nav {
         position: fixed; inset: 0; height: 100dvh;
         background: rgba(7, 6, 11, .96);
         border-top: 1px solid var(--line);
         transform: translateY(-100%); opacity: 0; pointer-events: none;
         transition: transform .24s ease, opacity .24s ease;
-        padding: 84px 22px 22px;
-        z-index: 200;
+        padding: 84px 22px 22px; /* 72px header + respiro */
+        z-index: 500;
       }
       nav.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
 
@@ -276,7 +277,7 @@
     }
     .hljs { background: transparent !important; }
 
-    /* Controles móveis (ficam dentro do #game e somem junto no mobile) */
+    /* Controles móveis (estão dentro de #game e somem junto no mobile) */
     .mobile-ctrls {
       position: absolute; left: 0; right: 0; bottom: calc(10px + env(safe-area-inset-bottom, 0px));
       display: none; justify-content: space-between; align-items: flex-end;
@@ -371,7 +372,7 @@
           <img src="assets/images/profile/profile.png" alt="Foto de Marcos Vinícius Leão" class="me"/>
           <div>
             <p class="subtitle2">Brasileiro, casado — <strong>32 anos</strong>. Aguiarnópolis/TO.<br>
-              Tel: <a href="tel:+5563992131462">+55 (63) 99213-1462</a> · Email:
+              Email:
               <a href="mailto:marcosleaosistemas@gmail.com">marcosleaosistemas@gmail.com</a>
             </p>
             <p>Sou apaixonado por tecnologia, programação e desafios que exigem criatividade e solução de problemas. Quando não sei algo, eu aprendo e resolvo.</p>
@@ -521,14 +522,33 @@
   <script>
     /* ===== Menu mobile ===== */
     const navToggle = document.getElementById('navToggle');
-    const topNav = document.getElementById('topNav');
+    const topNav   = document.getElementById('topNav');
+
     function setMenu(open){
       topNav.classList.toggle('open', open);
       document.body.classList.toggle('no-scroll', open);
       navToggle.setAttribute('aria-expanded', String(open));
     }
-    navToggle.addEventListener('click', ()=> setMenu(!topNav.classList.contains('open')));
-    topNav.addEventListener('click', e => { if(e.target.tagName === 'A') setMenu(false); });
+
+    // abre/fecha pelo botão (toggle fica acima do overlay)
+    navToggle.addEventListener('click', () => {
+      setMenu(!topNav.classList.contains('open'));
+    });
+
+    // fecha ao clicar em um link
+    topNav.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') setMenu(false);
+    });
+
+    // fecha ao clicar no fundo do overlay (área vazia)
+    topNav.addEventListener('click', (e) => {
+      if (e.target === topNav) setMenu(false);
+    });
+
+    // fecha com ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && topNav.classList.contains('open')) setMenu(false);
+    });
 
     /* ===== Stacks: carousel ===== */
     const stacks = [
